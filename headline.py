@@ -21,7 +21,6 @@ def Index():
             </body>
         </html>
     """.format(first_article.get("title"), first_article.get("published"), first_article.get("summary"))
-    return "Here's no news."
 
 if __name__ == '__main__':
     app.run(port = 5000, debug = True)
