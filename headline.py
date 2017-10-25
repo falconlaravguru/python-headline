@@ -6,6 +6,10 @@ from flask import Flask
 from flask import render_template
 # Request context used
 from flask import request
+# Add weather data - OpenWeatherwithMap
+import json
+import urllib
+import urllib2
 
 app = Flask(__name__)
 
