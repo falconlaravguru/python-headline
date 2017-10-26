@@ -14,6 +14,23 @@
             <input type="text" name="publication" placeholder="Search" />
             <input type="submit" value="Submit" />
         </form>
+        <h2>Currency</h2>
+        <form>
+            from: <select name="currency_from">
+                {% for currency in currencies %}
+                    <option value="{{currency}}"
+                    {{'selected="selected"' if currency_from==currency}}> {{currency}}</option>
+                {% endfor %}
+            </select>
+            to: <select name="currency_to">
+                {% for currency in currencies %}
+                    <option value="{{currency}}" 
+                    {{'selected="selected"' if currency_to==currency}}> {{currency}}</option>
+                {% endfor %}
+            </select>
+            <input type="submit" value="Submit">
+        </form>
+        1 {{currency_from}} = {{currency_to}} {{rate}}
         <h1>Headlines</h1>
         {% for article in articles %}
             <b><a href="{{article.link}}">{{article.title}}</a></b><br />

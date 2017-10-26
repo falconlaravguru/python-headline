@@ -22,10 +22,13 @@ RSS_FEEDS = {
 
 DEFAULTS = {
     'publication':'bbc',
-    'city':'London,UK'
+    'city':'Manchester,UK',
+    'currency_from':'GBP',
+    'currency_to':'USD'
 }
 
 WEATHER_URL = "http://api.openweathermap.org/data/2.5/weather?q={}&appid=76cf4ebd7c79db726efc2ddeb6cd41b6"
+CURRENCY_URL = "https://openexchangerates.org//api/latest.json?app_id=4e8eb525d0214a2f812745354e3f3f9d"
 
 @app.route('/', methods=['GET','POST'])
 def home():
@@ -35,13 +38,27 @@ def home():
         publication = DEFAULTS['publication']
     articles = get_news(publication)
     # get customized weather based on user input or default
-    city = request.form.get('city')
+    city = request.args.get('city')
     if not city:
         city = DEFAULTS['city']
     weather = get_weather(city)
 
+    # get customized currency based on user input or default
+    currency_from = request.args.get("currency_from")
+    if not currency_from:
+        currency_from = DEFAULTS['currency_from']
+    currency_to = request.args.get("currency_to")
+    if not currency_to:
+        currency_to = DEFAULTS['currency_to']
+    rate = get_rate(currency_from, currency_to)
+    rate, currencies = get_rate(currency_from, currency_to)
+
     return render_template("home.html", articles=articles,
-                                        weather=weather)
+                                        weather=weather,
+                                        currency_from=currency_from,
+                                        currency_to=currency_to,
+                                        rate=rate,
+                                        currencies=sorted(currencies) )
 
 def get_news(publication):
     if not publication or publication.lower() not in RSS_FEEDS :
@@ -66,6 +83,15 @@ def get_weather(query):
                     'city':parsed['name']
                 }
     return weather
+
+def get_rate(frm,to):
+    all_currency = urllib2.urlopen(CURRENCY_URL).read()
+
+    parsed = json.loads(all_currency).get('rates')
+    frm_rate = parsed.get(frm.upper())
+    to_rate = parsed.get(to.upper())
+
+    return ( to_rate/frm_rate, parsed.keys() )
 
 if __name__ == '__main__':
     app.run(port = 5000, debug = True)
