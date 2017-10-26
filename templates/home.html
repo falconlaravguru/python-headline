@@ -10,10 +10,7 @@
         </form>
         <p>City: <b>{{weather.city}}</b></p>
         <p>{{weather.description}} |{{weather.temperature}}&#8457;</p>
-        <form action="/" method="POST">
-            <input type="text" name="publication" placeholder="Search" />
-            <input type="submit" value="Submit" />
-        </form>
+        
         <h2>Currency</h2>
         <form>
             from: <select name="currency_from">
@@ -30,8 +27,12 @@
             </select>
             <input type="submit" value="Submit">
         </form>
-        1 {{currency_from}} = {{currency_to}} {{rate}}
+        1 {{currency_from}} = {{rate}} {{currency_to}} 
         <h1>Headlines</h1>
+        <form action="/" method="POST">
+            <input type="text" name="publication" placeholder="Search" />
+            <input type="submit" value="Submit" />
+        </form>
         {% for article in articles %}
             <b><a href="{{article.link}}">{{article.title}}</a></b><br />
             <i>{{article.published}}</i><br />
